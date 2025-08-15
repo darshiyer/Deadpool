@@ -1,0 +1,325 @@
+/* Mobile-first responsive design */
+
+/* Base mobile styles */
+@media (max-width: 768px) {
+  /* Layout adjustments */
+  .container {
+    padding: 0.5rem;
+  }
+  
+  /* Navigation improvements */
+  .navigation {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+  }
+  
+  .navigation-items {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  
+  .navigation-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    min-width: 60px;
+    text-align: center;
+  }
+  
+  .navigation-icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 0.25rem;
+  }
+  
+  .navigation-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  /* Main content area */
+  .main-content {
+    padding-bottom: 80px; /* Space for bottom navigation */
+    min-height: calc(100vh - 80px);
+  }
+  
+  /* Chat interface */
+  .chat-container {
+    height: calc(100vh - 160px); /* Account for navigation and input */
+  }
+  
+  .chat-messages {
+    padding: 1rem 0.5rem;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+  }
+  
+  .chat-input-container {
+    position: fixed;
+    bottom: 80px; /* Above navigation */
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.75rem;
+    z-index: 40;
+  }
+  
+  /* Dashboard cards */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .dashboard-card {
+    margin-bottom: 1rem;
+  }
+  
+  /* Forms */
+  .form-container {
+    padding: 1rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 16px; /* Prevent zoom on iOS */
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+  }
+  
+  /* Buttons */
+  .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    min-height: 44px; /* Touch target size */
+    min-width: 44px;
+  }
+  
+  .btn-primary {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+  }
+  
+  .btn-secondary {
+    background-color: #6b7280;
+    color: white;
+    border: none;
+  }
+  
+  /* Modal adjustments */
+  .modal {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+  
+  /* Voice interface */
+  .voice-button {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 2rem;
+  }
+  
+  /* Exercise planner */
+  .exercise-card {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  
+  /* Profile sections */
+  .profile-section {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .navigation {
+    position: relative;
+    background: transparent;
+    border: none;
+    padding: 1rem 0;
+  }
+  
+  .main-content {
+    padding-bottom: 0;
+  }
+  
+  .chat-input-container {
+    position: relative;
+    bottom: auto;
+    background: transparent;
+    border: none;
+  }
+}
+
+/* Touch and gesture improvements */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent text selection on UI elements */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Safe area handling for devices with notches */
+@supports (padding: max(0px)) {
+  .safe-area-top {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  
+  .safe-area-left {
+    padding-left: max(1rem, env(safe-area-inset-left));
+  }
+  
+  .safe-area-right {
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+}
+
+/* Dark mode adjustments for mobile */
+@media (prefers-color-scheme: dark) {
+  .navigation {
+    background: rgba(17, 24, 39, 0.95);
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .chat-input-container {
+    background: #111827;
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .profile-section {
+    background: #1f2937;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .btn {
+    border: 2px solid currentColor;
+  }
+  
+  .form-input {
+    border: 2px solid #000;
+  }
+  
+  .navigation-item {
+    border: 1px solid currentColor;
+    border-radius: 4px;
+  }
+}
+
+/* Focus indicators for keyboard navigation */
+.focus-visible:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Loading states */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Haptic feedback simulation */
+.haptic-light {
+  animation: haptic-light 0.1s ease-out;
+}
+
+.haptic-medium {
+  animation: haptic-medium 0.2s ease-out;
+}
+
+.haptic-heavy {
+  animation: haptic-heavy 0.3s ease-out;
+}
+
+@keyframes haptic-light {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+@keyframes haptic-medium {
+  0% { transform: scale(1); }
+  25% { transform: scale(0.95); }
+  75% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes haptic-heavy {
+  0% { transform: scale(1); }
+  20% { transform: scale(0.92); }
+  40% { transform: scale(1.05); }
+  60% { transform: scale(0.98); }
+  80% { transform: scale(1.01); }
+  100% { transform: scale(1); }
+}

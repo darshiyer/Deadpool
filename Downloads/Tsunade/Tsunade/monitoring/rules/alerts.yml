@@ -1,0 +1,327 @@
+groups:
+  # Application Health Alerts
+  - name: application.health
+    rules:
+      - alert: BackendDown
+        expr: up{job="lp-assistant-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: backend
+        annotations:
+          summary: "Backend service is down"
+          description: "The LP Assistant backend service has been down for more than 1 minute."
+          runbook_url: "https://docs.lp-assistant-health.com/runbooks/backend-down"
+
+      - alert: FrontendDown
+        expr: up{job="lp-assistant-frontend"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: frontend
+        annotations:
+          summary: "Frontend service is down"
+          description: "The LP Assistant frontend service has been down for more than 2 minutes."
+          runbook_url: "https://docs.lp-assistant-health.com/runbooks/frontend-down"
+
+      - alert: HighErrorRate
+        expr: |
+          (
+            rate(http_requests_total{status=~"5.."}[5m]) /
+            rate(http_requests_total[5m])
+          ) * 100 > 5
+        for: 5m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value }}% for the last 5 minutes."
+
+      - alert: SlowResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "Slow response time detected"
+          description: "95th percentile response time is {{ $value }}s for the last 5 minutes."
+
+  # Database Alerts
+  - name: database.health
+    rules:
+      - alert: PostgreSQLDown
+        expr: up{job="postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: database
+        annotations:
+          summary: "PostgreSQL is down"
+          description: "PostgreSQL database has been down for more than 1 minute."
+
+      - alert: PostgreSQLHighConnections
+        expr: |
+          (
+            pg_stat_database_numbackends /
+            pg_settings_max_connections
+          ) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "PostgreSQL high connection usage"
+          description: "PostgreSQL connection usage is {{ $value }}%."
+
+      - alert: PostgreSQLSlowQueries
+        expr: pg_stat_activity_max_tx_duration > 300
+        for: 2m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "PostgreSQL slow queries detected"
+          description: "Long running queries detected (> 5 minutes)."
+
+      - alert: RedisDown
+        expr: up{job="redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: cache
+        annotations:
+          summary: "Redis is down"
+          description: "Redis cache has been down for more than 1 minute."
+
+      - alert: RedisHighMemoryUsage
+        expr: |
+          (
+            redis_memory_used_bytes /
+            redis_memory_max_bytes
+          ) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+          service: cache
+        annotations:
+          summary: "Redis high memory usage"
+          description: "Redis memory usage is {{ $value }}%."
+
+      - alert: MongoDBDown
+        expr: up{job="mongodb"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: database
+        annotations:
+          summary: "MongoDB is down"
+          description: "MongoDB database has been down for more than 1 minute."
+
+  # System Resource Alerts
+  - name: system.resources
+    rules:
+      - alert: HighCPUUsage
+        expr: |
+          (
+            100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+          ) > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is {{ $value }}% on {{ $labels.instance }}."
+
+      - alert: HighMemoryUsage
+        expr: |
+          (
+            (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) /
+            node_memory_MemTotal_bytes
+          ) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is {{ $value }}% on {{ $labels.instance }}."
+
+      - alert: LowDiskSpace
+        expr: |
+          (
+            (node_filesystem_size_bytes - node_filesystem_free_bytes) /
+            node_filesystem_size_bytes
+          ) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "Low disk space detected"
+          description: "Disk usage is {{ $value }}% on {{ $labels.instance }} ({{ $labels.mountpoint }})."
+
+      - alert: HighDiskIOWait
+        expr: rate(node_cpu_seconds_total{mode="iowait"}[5m]) * 100 > 10
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High disk I/O wait detected"
+          description: "Disk I/O wait is {{ $value }}% on {{ $labels.instance }}."
+
+  # Container Alerts
+  - name: container.health
+    rules:
+      - alert: ContainerKilled
+        expr: time() - container_last_seen > 60
+        for: 0m
+        labels:
+          severity: warning
+          service: container
+        annotations:
+          summary: "Container killed"
+          description: "Container {{ $labels.name }} has disappeared."
+
+      - alert: ContainerHighCPUUsage
+        expr: |
+          (
+            rate(container_cpu_usage_seconds_total[3m]) * 100
+          ) > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: container
+        annotations:
+          summary: "Container high CPU usage"
+          description: "Container {{ $labels.name }} CPU usage is {{ $value }}%."
+
+      - alert: ContainerHighMemoryUsage
+        expr: |
+          (
+            container_memory_usage_bytes /
+            container_spec_memory_limit_bytes
+          ) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: container
+        annotations:
+          summary: "Container high memory usage"
+          description: "Container {{ $labels.name }} memory usage is {{ $value }}%."
+
+  # Security Alerts
+  - name: security
+    rules:
+      - alert: TooManyFailedLogins
+        expr: increase(failed_login_attempts_total[5m]) > 10
+        for: 0m
+        labels:
+          severity: warning
+          service: security
+        annotations:
+          summary: "Too many failed login attempts"
+          description: "{{ $value }} failed login attempts in the last 5 minutes."
+
+      - alert: UnauthorizedAPIAccess
+        expr: increase(http_requests_total{status="401"}[5m]) > 20
+        for: 2m
+        labels:
+          severity: warning
+          service: security
+        annotations:
+          summary: "High number of unauthorized API requests"
+          description: "{{ $value }} unauthorized requests in the last 5 minutes."
+
+      - alert: SuspiciousUserActivity
+        expr: increase(suspicious_activity_total[10m]) > 5
+        for: 0m
+        labels:
+          severity: critical
+          service: security
+        annotations:
+          summary: "Suspicious user activity detected"
+          description: "{{ $value }} suspicious activities detected in the last 10 minutes."
+
+  # Business Logic Alerts
+  - name: business.logic
+    rules:
+      - alert: HighPatientRegistrationFailure
+        expr: |
+          (
+            rate(patient_registration_failures_total[10m]) /
+            rate(patient_registration_attempts_total[10m])
+          ) * 100 > 10
+        for: 5m
+        labels:
+          severity: warning
+          service: business
+        annotations:
+          summary: "High patient registration failure rate"
+          description: "Patient registration failure rate is {{ $value }}%."
+
+      - alert: LowHealthDataIngestion
+        expr: rate(health_data_ingested_total[10m]) < 10
+        for: 10m
+        labels:
+          severity: warning
+          service: business
+        annotations:
+          summary: "Low health data ingestion rate"
+          description: "Health data ingestion rate is {{ $value }} records/second."
+
+      - alert: HighAIModelLatency
+        expr: histogram_quantile(0.95, rate(ai_model_inference_duration_seconds_bucket[5m])) > 5
+        for: 5m
+        labels:
+          severity: warning
+          service: ai
+        annotations:
+          summary: "High AI model inference latency"
+          description: "95th percentile AI model inference time is {{ $value }}s."
+
+  # External Service Alerts
+  - name: external.services
+    rules:
+      - alert: ExternalAPIDown
+        expr: probe_success{job="blackbox"} == 0
+        for: 2m
+        labels:
+          severity: warning
+          service: external
+        annotations:
+          summary: "External API endpoint is down"
+          description: "External API {{ $labels.instance }} has been down for more than 2 minutes."
+
+      - alert: HighExternalAPILatency
+        expr: probe_duration_seconds > 5
+        for: 5m
+        labels:
+          severity: warning
+          service: external
+        annotations:
+          summary: "High external API latency"
+          description: "External API {{ $labels.instance }} latency is {{ $value }}s."
+
+      - alert: EmailServiceDown
+        expr: email_service_health == 0
+        for: 5m
+        labels:
+          severity: warning
+          service: notification
+        annotations:
+          summary: "Email service is down"
+          description: "Email notification service has been down for more than 5 minutes."
+
+      - alert: SMSServiceDown
+        expr: sms_service_health == 0
+        for: 5m
+        labels:
+          severity: warning
+          service: notification
+        annotations:
+          summary: "SMS service is down"
+          description: "SMS notification service has been down for more than 5 minutes."
