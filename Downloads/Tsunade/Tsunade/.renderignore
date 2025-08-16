@@ -18,6 +18,11 @@ container/
 .github/workflows/*docker*
 .github/workflows/*container*
 
+# Ignore node_modules to prevent Docker detection from dependencies
+node_modules/
+**/node_modules/
+frontend/node_modules/
+
 # Ignore backup files
 *.backup
 
