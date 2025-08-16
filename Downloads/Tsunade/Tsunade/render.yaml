@@ -23,6 +23,20 @@ services:
         fromDatabase:
           name: deadpool-db
           property: connectionString
+      - key: REDIS_URL
+        value: redis://localhost:6379
+      - key: MONGODB_URL
+        value: mongodb://localhost:27017
+      - key: MONGODB_DB_NAME
+        value: lp_assistant_mongo
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 30
+      - key: API_V1_STR
+        value: /api/v1
+      - key: PROJECT_NAME
+        value: LP Assistant Healthcare Platform
     healthCheckPath: /health
 
 databases:
