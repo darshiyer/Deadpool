@@ -17,7 +17,9 @@ RUN apt-get update \
         curl \
         libpq-dev \
         gcc \
-        && rm -rf /var/lib/apt/lists/*
+        tesseract-ocr \
+        tesseract-ocr-eng \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
 COPY requirements.txt .
