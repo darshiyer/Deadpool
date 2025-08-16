@@ -1,0 +1,33 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "pip install -r backend/requirements.txt"
+
+[deploy]
+startCommand = "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+[env]
+PORT = { default = "8000" }
+ENVIRONMENT = { default = "production" }
+DEBUG = { default = "false" }
+
+# Health check configuration
+[healthcheck]
+path = "/health"
+interval = 30
+timeout = 10
+
+# Resource limits
+[resources]
+memory = 512
+cpu = 0.5
+
+# Auto-scaling
+[scaling]
+min = 1
+max = 3
+
+# Networking
+[networking]
+serviceDomain = true
