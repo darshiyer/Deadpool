@@ -1,0 +1,58 @@
+# Koyeb deployment configuration for FastAPI backend
+services:
+  - name: tsunade-backend
+    type: web
+    git:
+      branch: master
+      build_command: pip install -r backend/requirements.txt
+      run_command: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    instance_type: nano
+    regions:
+      - was  # Washington (US East)
+    scaling:
+      min: 1
+      max: 1
+    ports:
+      - port: 8000
+        protocol: http
+    health_check:
+      http:
+        path: /health
+        port: 8000
+    env:
+      - name: ENVIRONMENT
+        value: production
+      - name: DEBUG
+        value: "false"
+      - name: SECRET_KEY
+        # Set this in Koyeb dashboard as a secret
+        from_secret: SECRET_KEY
+      - name: CORS_ORIGINS
+        value: "https://lp-assistant-healthcare.vercel.app,http://localhost:3000"
+      - name: DATABASE_URL
+        # Will be set to Koyeb managed PostgreSQL connection string
+        from_secret: DATABASE_URL
+      - name: REDIS_URL
+        # Optional - can be external Redis service or removed if not needed
+        value: "redis://localhost:6379"
+      - name: MONGODB_URL
+        # Optional - can be external MongoDB service or removed if not needed
+        value: "mongodb://localhost:27017"
+      - name: MONGODB_DB_NAME
+        value: "lp_assistant_mongo"
+      - name: ALGORITHM
+        value: "HS256"
+      - name: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "30"
+      - name: API_V1_STR
+        value: "/api/v1"
+      - name: PROJECT_NAME
+        value: "LP Assistant Healthcare Platform"
+
+# Database configuration (Koyeb managed PostgreSQL)
+databases:
+  - name: tsunade-db
+    type: postgresql
+    version: "15"
+    plan: hobby  # Free tier
+    region: was

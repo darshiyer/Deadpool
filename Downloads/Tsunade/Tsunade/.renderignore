@@ -4,6 +4,20 @@ Dockerfile*
 docker-compose*
 .dockerignore
 
+# Additional Docker patterns
+**/Dockerfile
+**/Dockerfile.*
+**/docker-compose.*
+**/.dockerignore
+docker/
+container/
+*.docker
+.docker/
+
+# CI/CD Docker references
+.github/workflows/*docker*
+.github/workflows/*container*
+
 # Ignore backup files
 *.backup
 
