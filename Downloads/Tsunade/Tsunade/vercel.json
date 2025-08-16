@@ -1,15 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "buildCommand": "cd frontend && chmod +x vercel-build.sh && ./vercel-build.sh",
-        "outputDirectory": "frontend/build"
-      }
-    }
-  ],
+  "buildCommand": "cd frontend && chmod +x node_modules/.bin/* 2>/dev/null || true && CI=false NODE_ENV=production npx react-scripts build",
+  "outputDirectory": "frontend/build",
+  "installCommand": "cd frontend && npm ci",
+  "framework": null,
   "rewrites": [
     {
       "source": "/(.*)",

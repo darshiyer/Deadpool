@@ -14,38 +14,41 @@ The issue was caused by incorrect Vercel configuration that was trying to build 
 
 ## Solution Applied
 
-### Final Solution: Direct npx Command
-After multiple attempts with custom scripts, the most effective solution is using a direct npx command in `vercel.json`:
+### Final Solution: Custom Build Scripts with @vercel/static-build
+After multiple attempts, the ultimate solution uses Vercel's `@vercel/static-build` with custom build scripts:
 
-**Before**:
+**Updated `vercel.json`**:
 ```json
 {
   "version": 2,
-  "buildCommand": "cd frontend && npm ci && npm run build",
-  "outputDirectory": "frontend/build",
-  "installCommand": "cd frontend && npm ci",
-  "framework": "create-react-app"
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "buildCommand": "cd frontend && chmod +x vercel-build.sh && ./vercel-build.sh",
+        "outputDirectory": "frontend/build"
+      }
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
 ```
 
-**After**:
-```json
-{
-  "version": 2,
-  "buildCommand": "CI=false npx react-scripts build",
-  "outputDirectory": "build",
-  "installCommand": "npm ci",
-  "framework": null,
-  "cwd": "frontend"
-}
-```
+**Created Custom Build Scripts**:
+1. **`frontend/vercel-build.sh`** - Shell script that fixes permissions and runs npx
+2. **`frontend/vercel-build.js`** - Node.js alternative build script
 
 ### Why This Works:
-- **Direct npx usage**: Bypasses the `node_modules/.bin/react-scripts` permission issue entirely
-- **CI=false**: Prevents build warnings from causing deployment failures
-- **No custom scripts**: Eliminates dependency on shell scripts or package.json modifications
-- **Framework null**: Gives us full control over the build process
-- **Added `"cwd": "frontend"`** to set the working directory
+- **@vercel/static-build**: Uses Vercel's dedicated static site builder
+- **Custom shell script**: Bypasses npm scripts entirely and fixes permissions
+- **Direct npx usage**: Avoids the `node_modules/.bin/react-scripts` permission issue
+- **Explicit paths**: Uses absolute paths to avoid directory confusion
 
 ## Next Steps for User
 
