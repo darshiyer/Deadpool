@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: tsunade-backend
+    name: deadpool-backend
     env: python
     region: oregon
     buildCommand: pip install -r backend/requirements.txt
@@ -13,15 +13,15 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: CORS_ORIGINS
-        value: https://tsunade-frontend.vercel.app,http://localhost:3000
+        value: https://deadpool-frontend.vercel.app,http://localhost:3000
       - key: DATABASE_URL
         fromDatabase:
-          name: tsunade-db
+          name: deadpool-db
           property: connectionString
     healthCheckPath: /health
 
 databases:
-  - name: tsunade-db
-    databaseName: tsunade
-    user: tsunade_user
+  - name: deadpool-db
+    databaseName: deadpool
+    user: deadpool_user
     region: oregon

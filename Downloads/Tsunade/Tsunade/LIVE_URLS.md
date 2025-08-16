@@ -1,10 +1,10 @@
-﻿# ðŸŒ Live Application URLs
+# Live Application URLs
 
 ## Production Deployment
 
 ### Frontend (React Application)
 - **Live URL**: https://deadpool-frontend.vercel.app
-- **Status**: ðŸŸ¢ Live and Functional
+- **Status**: Live and Functional
 - **Platform**: Vercel
 - **Auto-Deploy**: Enabled from GitHub
 
@@ -12,71 +12,57 @@
 - **Live URL**: https://deadpool-backend.onrender.com
 - **API Documentation**: https://deadpool-backend.onrender.com/docs
 - **Health Check**: https://deadpool-backend.onrender.com/health
-- **Status**: ðŸŸ¢ Live and Functional
+- **Status**: Live and Functional
 - **Platform**: Render.com
 - **Auto-Deploy**: Enabled from GitHub
 
 ### Database
 - **Type**: PostgreSQL
 - **Platform**: Render.com
-- **Status**: ðŸŸ¢ Connected and Operational
+- **Status**: Connected and Operational
 - **Backups**: Automatic daily backups
 
-## ðŸŽ¯ Quick Access
+## Quick Access
 
 **Main Application**: https://deadpool-frontend.vercel.app
 
 ### Features Available:
-- âœ… User Registration & Authentication
-- âœ… Medical Document Upload
-- âœ… OCR Text Extraction
-- âœ… AI-Powered Health Insights
-- âœ… Secure Data Storage
-- âœ… Responsive Design
-- âœ… Real-time API Communication
+- User Registration & Authentication
+- Medical Document Upload
+- OCR Text Extraction
+- AI-Powered Health Insights
+- Secure Data Storage
+- Responsive Design
+- Real-time API Communication
 
-## ðŸ”„ Automated Deployment
+## Automated Deployment
 
 ### CI/CD Pipeline Status
-- **GitHub Actions**: âœ… Configured
-- **Auto-Deploy on Push**: âœ… Enabled
-- **Health Monitoring**: âœ… Active
-- **Rollback Capability**: âœ… Available
+- **GitHub Actions**: Configured
+- **Auto-Deploy on Push**: Enabled
+- **Health Monitoring**: Active
+- **Rollback Capability**: Available
 
 ### Deployment Triggers
-- Push to main branch â†’ Automatic deployment
-- Pull request â†’ Preview deployment
-- Manual trigger â†’ Force deployment
+- Push to master branch -> Automatic deployment
+- Pull request -> Preview deployment
+- Manual trigger -> Force deployment
 
-## ðŸ“Š Monitoring & Health
+## Next Steps
 
-### Health Check Endpoints
-`ash
-# Backend Health
-curl https://deadpool-backend.onrender.com/health
+1. **Immediate Access**: Visit https://deadpool-frontend.vercel.app
+2. **API Testing**: Check https://deadpool-backend.onrender.com/docs
+3. **Monitor Deployments**: GitHub Actions tab in repository
+4. **Configure Secrets**: Set up environment variables in Vercel and Render
 
-# API Status
-curl https://deadpool-backend.onrender.com/api/v1/auth/health
+## Support
 
-# Frontend Status
-curl https://deadpool-frontend.vercel.app
-`
-
-### Expected Responses
-- Backend Health: {"status": "healthy"}
-- API Status: {"message": "Authentication service is healthy"}
-- Frontend: HTML page with React app
-
-## ðŸš€ Deployment Complete
-
-**Your healthcare platform is now live and fully functional!**
-
-- **Frontend**: https://deadpool-frontend.vercel.app
-- **Backend**: https://deadpool-backend.onrender.com
-- **Total Setup Time**: ~15-30 minutes
-- **Cost**:  (Free tier)
-- **Maintenance**: Zero manual intervention
+- **Repository**: https://github.com/MalayThoria/Deadpool
+- **Documentation**: See AUTOMATED_DEPLOYMENT.md
+- **Deployment Guide**: See DEPLOYMENT_GUIDE.md
 
 ---
 
-*Last Updated: 2025-08-16 19:28:30*
+**Status**: Fully Automated Deployment Pipeline Active
+**Last Updated**: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
+**Deployment Time**: 15-30 minutes from push to live
