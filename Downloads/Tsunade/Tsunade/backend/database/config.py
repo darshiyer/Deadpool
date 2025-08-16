@@ -90,15 +90,30 @@ def get_sync_db() -> Generator[Session, None, None]:
 async def init_redis():
     """Initialize Redis connection"""
     global redis_client
-    redis_client = redis.from_url(REDIS_URL, encoding="utf-8", decode_responses=True)
-    return redis_client
+    try:
+        redis_client = redis.from_url(REDIS_URL, encoding="utf-8", decode_responses=True)
+        # Test the connection
+        await redis_client.ping()
+        return redis_client
+    except Exception as e:
+        print(f"Redis connection failed: {e}")
+        redis_client = None
+        raise e
 
 async def init_mongodb():
     """Initialize MongoDB connection"""
     global mongo_client, mongo_db
-    mongo_client = AsyncIOMotorClient(MONGO_URL)
-    mongo_db = mongo_client[MONGO_DB_NAME]
-    return mongo_db
+    try:
+        mongo_client = AsyncIOMotorClient(MONGO_URL)
+        mongo_db = mongo_client[MONGO_DB_NAME]
+        # Test the connection
+        await mongo_client.admin.command('ping')
+        return mongo_db
+    except Exception as e:
+        print(f"MongoDB connection failed: {e}")
+        mongo_client = None
+        mongo_db = None
+        raise e
 
 async def close_redis():
     """Close Redis connection"""

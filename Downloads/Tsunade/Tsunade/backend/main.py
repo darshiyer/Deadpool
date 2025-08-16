@@ -29,13 +29,30 @@ limiter = Limiter(key_func=get_remote_address)
 async def lifespan(app: FastAPI):
     # Startup
     from database.config import init_redis, init_mongodb
-    await init_redis()
-    await init_mongodb()
+    try:
+        await init_redis()
+        print("✅ Redis connected successfully")
+    except Exception as e:
+        print(f"⚠️ Redis connection failed: {e}")
+    
+    try:
+        await init_mongodb()
+        print("✅ MongoDB connected successfully")
+    except Exception as e:
+        print(f"⚠️ MongoDB connection failed: {e}")
+    
     yield
     # Shutdown
     from database.config import close_redis, close_mongodb
-    await close_redis()
-    await close_mongodb()
+    try:
+        await close_redis()
+    except Exception as e:
+        print(f"⚠️ Redis close failed: {e}")
+    
+    try:
+        await close_mongodb()
+    except Exception as e:
+        print(f"⚠️ MongoDB close failed: {e}")
 
 app = FastAPI(
     title="LP Assistant Healthcare API",
