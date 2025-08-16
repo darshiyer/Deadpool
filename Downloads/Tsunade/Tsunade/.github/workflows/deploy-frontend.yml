@@ -31,8 +31,9 @@ jobs:
     - name: Build React app
       run: |
         cd frontend
-        CI=false npm run build
+        npm run build
       env:
+        CI: false
         REACT_APP_API_URL: https://deadpool-production.up.railway.app
         
     - name: Deploy to GitHub Pages
