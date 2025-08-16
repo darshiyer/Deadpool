@@ -2,9 +2,9 @@ name: Automated Full-Stack Deployment
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ master ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ master ]
 
 env:
   NODE_VERSION: '18'
