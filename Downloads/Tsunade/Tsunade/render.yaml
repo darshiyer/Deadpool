@@ -4,11 +4,9 @@ services:
     env: python
     region: oregon
     runtime: python-3.11
-    buildCommand: pip install -r backend/requirements.txt
-    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
-    dockerfilePath: null
-    dockerContext: null
-    dockerCommand: null
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     buildFilter:
       paths:
         - backend/**
@@ -16,6 +14,8 @@ services:
         - frontend/**
         - node_modules/**
         - "**/Dockerfile*"
+        - "**/.dockerignore"
+        - "**/docker-compose*"
     plan: free
     envVars:
       - key: ENVIRONMENT
