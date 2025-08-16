@@ -1,0 +1,32 @@
+# Ignore Docker-related files to prevent auto-detection
+*.dockerfile
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Ignore backup files
+*.backup
+
+# Ignore development files
+.env.local
+.env.development
+
+# Ignore build artifacts
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore temporary files
+.tmp/
+temp/
