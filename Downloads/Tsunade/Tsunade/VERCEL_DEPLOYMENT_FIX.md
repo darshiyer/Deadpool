@@ -12,25 +12,19 @@ Error: Command "npm run build" exited with 126
 
 The issue was caused by incorrect Vercel configuration that was trying to build from the root directory instead of the frontend subdirectory, leading to permission and path issues.
 
-## Solution Applied
+## Final Solution
 
-### Final Solution: Custom Build Scripts with @vercel/static-build
-After multiple attempts, the ultimate solution uses Vercel's `@vercel/static-build` with custom build scripts:
+The issue was resolved by using a direct `buildCommand` in vercel.json that completely bypasses npm scripts:
 
-**Updated `vercel.json`**:
+### Updated vercel.json Configuration
+
 ```json
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "buildCommand": "cd frontend && chmod +x vercel-build.sh && ./vercel-build.sh",
-        "outputDirectory": "frontend/build"
-      }
-    }
-  ],
+  "buildCommand": "cd frontend && chmod +x node_modules/.bin/* 2>/dev/null || true && CI=false NODE_ENV=production npx react-scripts build",
+  "outputDirectory": "frontend/build",
+  "installCommand": "cd frontend && npm ci",
+  "framework": null,
   "rewrites": [
     {
       "source": "/(.*)",
@@ -40,15 +34,27 @@ After multiple attempts, the ultimate solution uses Vercel's `@vercel/static-bui
 }
 ```
 
-**Created Custom Build Scripts**:
-1. **`frontend/vercel-build.sh`** - Shell script that fixes permissions and runs npx
-2. **`frontend/vercel-build.js`** - Node.js alternative build script
+## Why This Solution Works
 
-### Why This Works:
-- **@vercel/static-build**: Uses Vercel's dedicated static site builder
-- **Custom shell script**: Bypasses npm scripts entirely and fixes permissions
-- **Direct npx usage**: Avoids the `node_modules/.bin/react-scripts` permission issue
-- **Explicit paths**: Uses absolute paths to avoid directory confusion
+1. **Direct Build Command**: Uses `buildCommand` instead of `builds` array to avoid Vercel's npm script execution
+2. **Permission Fix**: Includes `chmod +x node_modules/.bin/*` to fix execute permissions
+3. **Environment Variables**: Sets `CI=false` and `NODE_ENV=production` inline
+4. **Framework Override**: Sets `framework: null` to prevent Vercel's auto-detection
+5. **Explicit Install**: Uses `npm ci` for faster, reliable dependency installation
+6. **Complete Bypass**: Avoids all npm scripts that were causing permission issues
+
+## Key Changes from Previous Attempts
+
+- **Removed `builds` configuration**: Vercel was ignoring custom build commands in builds array
+- **Direct command execution**: No intermediate scripts or npm run commands
+- **Inline environment setup**: All environment variables set in the build command itself
+- **Simplified approach**: Single command that handles permissions, environment, and build
+
+## Backend Status
+
+✅ **Railway Backend**: https://deadpool-production.up.railway.app
+- Status: Healthy and running
+- Health check: `{"status":"healthy","service":"Rx Assistant API"}`
 
 ## Next Steps for User
 
