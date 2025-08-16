@@ -29,13 +29,19 @@ Render's buildpack detection follows this priority:
 - frontend/Dockerfile.production ❌
 ```
 
-### 2. Docker Compose File Isolation
+### 2. Docker Compose File Complete Removal
 ```bash
-# Renamed to prevent auto-detection
-docker-compose.yml → docker-compose.yml.backup
-docker-compose.production.yml → docker-compose.production.yml.backup
-docker-compose.staging.yml → docker-compose.staging.yml.backup
-docker-compose.prod.yml → docker-compose.prod.yml.backup
+# DELETED original files that were triggering auto-detection
+docker-compose.yml ❌ DELETED
+docker-compose.production.yml ❌ DELETED
+docker-compose.staging.yml ❌ DELETED
+docker-compose.prod.yml ❌ DELETED
+
+# Only .backup versions remain (ignored by Render)
+docker-compose.yml.backup ✅ SAFE
+docker-compose.production.yml.backup ✅ SAFE
+docker-compose.staging.yml.backup ✅ SAFE
+docker-compose.prod.yml.backup ✅ SAFE
 ```
 
 ### 3. Explicit Render Configuration
