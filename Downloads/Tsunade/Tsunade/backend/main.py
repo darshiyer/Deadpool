@@ -3,8 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 import os
-import sentry_sdk
-from sentry_sdk.integrations.fastapi import FastApiIntegration
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -13,13 +11,23 @@ from slowapi.errors import RateLimitExceeded
 load_dotenv('.env')
 
 # Initialize Sentry for error tracking (disabled for development)
-# if os.getenv("SENTRY_DSN"):
-#     sentry_sdk.init(
-#         dsn=os.getenv("SENTRY_DSN"),
-#         integrations=[FastApiIntegration()],
-#         traces_sample_rate=1.0,
-#         environment=os.getenv("ENVIRONMENT", "development")
-#     )
+try:
+    import sentry_sdk
+    from sentry_sdk.integrations.fastapi import FastApiIntegration
+    sentry_dsn = os.getenv("SENTRY_DSN")
+    if sentry_dsn and sentry_dsn.strip() and sentry_dsn.startswith(("http://", "https://")):
+        sentry_sdk.init(
+            dsn=sentry_dsn,
+            integrations=[FastApiIntegration()],
+            traces_sample_rate=1.0,
+        )
+        print("✅ Sentry initialized")
+    else:
+        print("⚠️ Sentry DSN not configured or invalid (continuing without error tracking)")
+except ImportError:
+    print("⚠️ Sentry not available (continuing without error tracking)")
+except Exception as e:
+    print(f"⚠️ Sentry initialization failed (continuing without error tracking): {e}")
 
 # Initialize rate limiter
 limiter = Limiter(key_func=get_remote_address)
@@ -28,31 +36,45 @@ limiter = Limiter(key_func=get_remote_address)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
-    from database.config import init_redis, init_mongodb
-    try:
-        await init_redis()
-        print("✅ Redis connected successfully")
-    except Exception as e:
-        print(f"⚠️ Redis connection failed: {e}")
+    print("🚀 Starting LP Assistant API...")
     
+    # Try to initialize external services but don't fail if they're not available
     try:
-        await init_mongodb()
-        print("✅ MongoDB connected successfully")
-    except Exception as e:
-        print(f"⚠️ MongoDB connection failed: {e}")
+        from database.config import init_redis, init_mongodb
+        try:
+            await init_redis()
+            print("✅ Redis connected successfully")
+        except Exception as e:
+            print(f"⚠️ Redis connection failed (continuing without Redis): {e}")
+        
+        try:
+            await init_mongodb()
+            print("✅ MongoDB connected successfully")
+        except Exception as e:
+            print(f"⚠️ MongoDB connection failed (continuing without MongoDB): {e}")
+    except ImportError as e:
+        print(f"⚠️ Database config not available (continuing without external databases): {e}")
     
+    print("✅ API startup completed")
     yield
-    # Shutdown
-    from database.config import close_redis, close_mongodb
-    try:
-        await close_redis()
-    except Exception as e:
-        print(f"⚠️ Redis close failed: {e}")
     
+    # Shutdown
+    print("🔄 Shutting down LP Assistant API...")
     try:
-        await close_mongodb()
-    except Exception as e:
-        print(f"⚠️ MongoDB close failed: {e}")
+        from database.config import close_redis, close_mongodb
+        try:
+            await close_redis()
+        except Exception as e:
+            print(f"⚠️ Redis close failed: {e}")
+        
+        try:
+            await close_mongodb()
+        except Exception as e:
+            print(f"⚠️ MongoDB close failed: {e}")
+    except ImportError:
+        print("⚠️ Database config not available for cleanup")
+    
+    print("✅ API shutdown completed")
 
 app = FastAPI(
     title="LP Assistant Healthcare API",
