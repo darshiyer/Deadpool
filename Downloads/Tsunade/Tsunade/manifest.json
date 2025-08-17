@@ -2,31 +2,31 @@
   "name": "LP Assistant Healthcare",
   "short_name": "LP Assistant",
   "description": "AI-powered healthcare assistant with prescription OCR, exercise recommendations, and health tracking",
-  "start_url": "/",
+  "start_url": "/Deadpool/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3b82f6",
   "orientation": "portrait-primary",
-  "scope": "/",
+  "scope": "/Deadpool/",
   "lang": "en",
   "categories": ["health", "medical", "fitness"],
   "icons": [
     {
-      "src": "icon-192x192.png",
+      "src": "/Deadpool/icon-192x192.svg",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "maskable any"
     },
     {
-      "src": "icon-512x512.png",
+      "src": "/Deadpool/icon-512x512.svg",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "maskable any"
     },
     {
-      "src": "apple-touch-icon.png",
+      "src": "/Deadpool/icon-192x192.svg",
       "sizes": "180x180",
-      "type": "image/png"
+      "type": "image/svg+xml"
     }
   ],
   "screenshots": [
@@ -55,10 +55,10 @@
       "name": "Chat Assistant",
       "short_name": "Chat",
       "description": "Start a conversation with the AI health assistant",
-      "url": "/?page=chat",
+      "url": "/Deadpool/?page=chat",
       "icons": [
         {
-          "src": "icon-192x192.png",
+          "src": "/Deadpool/icon-192x192.svg",
           "sizes": "192x192"
         }
       ]
@@ -67,7 +67,7 @@
       "name": "Exercise Planner",
       "short_name": "Exercise",
       "description": "Plan and track your exercise routines",
-      "url": "/?page=planner",
+      "url": "/Deadpool/?page=planner",
       "icons": [
         {
           "src": "icon-192x192.png",
@@ -79,7 +79,7 @@
       "name": "Health Dashboard",
       "short_name": "Dashboard",
       "description": "View your health metrics and progress",
-      "url": "/?page=dashboard",
+      "url": "/Deadpool/?page=dashboard",
       "icons": [
         {
           "src": "icon-192x192.png",

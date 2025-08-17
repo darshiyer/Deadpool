@@ -1,11 +1,11 @@
 const CACHE_NAME = 'lp-assistant-healthcare-v1';
 const urlsToCache = [
-  '/',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
-  '/manifest.json',
-  '/icon-192x192.png',
-  '/icon-512x512.png'
+  '/Deadpool/',
+  '/Deadpool/static/js/main.4b0c17ce.js',
+  '/Deadpool/static/css/main.79087dfa.css',
+  '/Deadpool/manifest.json',
+  '/Deadpool/icon-192x192.svg',
+  '/Deadpool/icon-512x512.svg'
 ];
 
 // Install event - cache resources
@@ -61,8 +61,8 @@ self.addEventListener('sync', (event) => {
 self.addEventListener('push', (event) => {
   const options = {
     body: event.data ? event.data.text() : 'New health update available!',
-    icon: '/icon-192x192.png',
-    badge: '/icon-192x192.png',
+    icon: '/Deadpool/icon-192x192.svg',
+    badge: '/Deadpool/icon-192x192.svg',
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
@@ -72,12 +72,12 @@ self.addEventListener('push', (event) => {
       {
         action: 'explore',
         title: 'View Details',
-        icon: '/icon-192x192.png'
+        icon: '/Deadpool/icon-192x192.svg'
       },
       {
         action: 'close',
         title: 'Close',
-        icon: '/icon-192x192.png'
+        icon: '/Deadpool/icon-192x192.svg'
       }
     ]
   };
@@ -93,7 +93,7 @@ self.addEventListener('notificationclick', (event) => {
 
   if (event.action === 'explore') {
     event.waitUntil(
-      clients.openWindow('/')
+      clients.openWindow('/Deadpool/')
     );
   }
 });
