@@ -17,14 +17,14 @@ Created `.github/workflows/deploy-frontend.yml` that:
 ### 2. Package.json Updates
 
 Updated `frontend/package.json` with:
-- `homepage`: "https://malaythoria.github.io/Deadpool"
+- `homepage`: "https://darshiyer.github.io/Deadpool"
 - `predeploy` and `deploy` scripts
 - `gh-pages` dev dependency
 - Fixed build script to use `react-scripts` directly
 
 ## 🚀 Deployment URLs
 
-- **Frontend (GitHub Pages)**: https://malaythoria.github.io/Deadpool
+- **Frontend (GitHub Pages)**: https://darshiyer.github.io/Deadpool
 - **Backend (Railway)**: https://deadpool-production.up.railway.app
 
 ## 📋 Setup Steps
